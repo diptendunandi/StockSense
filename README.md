@@ -1,187 +1,318 @@
-# StockSense: CSV-Based Stock Price Predictor
+<div align="center">
 
-A **C++17** stock price prediction engine that implements **Linear Regression from scratch** using the Normal Equation. No external ML libraries required.
+# StockSense
+
+### A High-Performance Stock Price Prediction Engine
+
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg?style=flat&logo=cplusplus)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.14%2B-064F8C?style=flat&logo=cmake)](https://cmake.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)]()
+
+*A robust C++17 stock price prediction engine implementing Linear Regression from scratch using the Normal Equation. Zero external ML dependencies.*
+
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Architecture](#architecture) • [Documentation](#documentation)
+
+---
+
+</div>
+
+## Overview
+
+**StockSense** is a command-line stock price prediction tool built entirely in modern C++. Unlike typical ML projects that rely on Python libraries, this project implements all mathematical operations from the ground up—demonstrating deep understanding of both the underlying algorithms and systems programming.
+
+### Why StockSense?
+
+- **Educational Value**: Understand ML internals by seeing how Linear Regression actually works
+- **No Black Boxes**: Every matrix operation, every calculation is transparent and accessible
+- **Production-Ready Code**: Clean architecture, comprehensive error handling, and thorough testing
+- **Performance**: Native C++ execution without interpreter overhead
+
+---
 
 ## Features
 
-- **CSV Parser**: Custom parser for Yahoo Finance format stock data
-- **Data Cleaning**: Forward-fill imputation, outlier detection, zero-volume filtering
-- **Feature Engineering**: SMA-5, SMA-20, Daily Returns, Price Range, Volume Change
-- **Linear Regression**: Implemented from scratch using the Normal Equation
-- **Baseline Model**: Moving Average for model comparison
-- **Evaluation Metrics**: RMSE, MAE, MAPE
-- **Time-Aware Split**: Proper train/test split for time-series data
+<table>
+<tr>
+<td width="50%">
 
-## Project Structure
+### Data Processing
+- Custom CSV parser for Yahoo Finance format
+- Forward-fill imputation for missing values
+- Outlier detection & removal
+- Zero-volume day filtering
 
-```
-StockSense/
-├── CMakeLists.txt           # Build configuration
-├── README.md                # This file
-├── data/
-│   └── AAPL.csv            # Sample Apple stock data
-├── output/
-│   └── predictions.csv     # Generated predictions
-├── include/
-│   ├── StockData.h         # Data structures
-│   ├── CSVParser.h         # CSV file parser
-│   ├── DataCleaner.h       # Data preprocessing
-│   ├── FeatureEngine.h     # Technical indicators
-│   ├── Matrix.h            # Matrix operations
-│   ├── LinearRegression.h  # ML model
-│   ├── BaselineModel.h     # Baseline comparison
-│   ├── Evaluator.h         # Metrics calculation
-│   ├── Predictor.h         # Pipeline orchestrator
-│   └── Display.h           # Console output
-├── src/
-│   ├── main.cpp            # Entry point + CLI
-│   ├── CSVParser.cpp
-│   ├── DataCleaner.cpp
-│   ├── FeatureEngine.cpp
-│   ├── Matrix.cpp
-│   ├── LinearRegression.cpp
-│   ├── BaselineModel.cpp
-│   ├── Evaluator.cpp
-│   ├── Predictor.cpp
-│   └── Display.cpp
-└── tests/
-    └── test_main.cpp       # Unit tests
-```
+</td>
+<td width="50%">
 
-## Building
+### Machine Learning
+- Linear Regression via Normal Equation
+- Moving Average baseline model
+- Time-aware train/test splitting
+- Multiple evaluation metrics
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### Feature Engineering
+- SMA-5 & SMA-20 (Moving Averages)
+- Daily Returns calculation
+- Price Range (Volatility)
+- Volume Change tracking
+
+</td>
+<td width="50%">
+
+### Evaluation Metrics
+- RMSE (Root Mean Square Error)
+- MAE (Mean Absolute Error)
+- MAPE (Mean Absolute Percentage Error)
+- Model comparison reports
+
+</td>
+</tr>
+</table>
+
+---
+
+## Installation
 
 ### Prerequisites
 
-- C++17 compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
-- CMake 3.14+
+| Requirement | Version |
+|-------------|---------|
+| C++ Compiler | GCC 7+, Clang 5+, or MSVC 2017+ |
+| CMake | 3.14 or higher |
+| Make | Any recent version |
 
-### Build Instructions
+### Build from Source
 
 ```bash
+# Clone the repository
+git clone https://github.com/diptendunandi/StockSense.git
+cd StockSense
+
 # Create build directory
 mkdir build && cd build
 
-# Configure
+# Configure and build
 cmake ..
-
-# Build
 make -j$(nproc)
 
-# Run tests
+# Run tests to verify installation
 ./stocksense_tests
 
-# Run main program
-./bin/stocksense --file ../data/AAPL.csv --days 5
+# Run the application
+./bin/stocksense --file ../data/aapl_stock_data.csv --days 5
 ```
+
+---
 
 ## Usage
 
+### Command Line Interface
+
 ```bash
 ./stocksense [OPTIONS]
-
-Options:
-  -f, --file <path>     Input CSV file (default: data/AAPL.csv)
-  -o, --output <path>   Output predictions CSV (default: output/predictions.csv)
-  -d, --days <N>        Number of future days to predict (default: 5)
-  -s, --split <ratio>   Train/test split ratio (default: 0.8)
-  -m, --model <type>    Model type: 'lr' or 'ma' (default: lr)
-  -v, --verbose         Enable verbose output
-  -h, --help            Show help message
-
-Examples:
-  ./stocksense --file data/AAPL.csv --days 7
-  ./stocksense -f data/MSFT.csv -d 10 -v
 ```
 
-## Sample Output
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-f, --file <path>` | Input CSV file path | `data/aapl_stock_data.csv` |
+| `-o, --output <path>` | Output predictions file | `output/predictions.csv` |
+| `-d, --days <N>` | Days to predict | `5` |
+| `-s, --split <ratio>` | Train/test split ratio | `0.8` |
+| `-m, --model <type>` | Model: `lr` (Linear Regression) or `ma` (Moving Average) | `lr` |
+| `-v, --verbose` | Enable detailed output | `false` |
+| `-h, --help` | Display help message | - |
+
+### Examples
+
+```bash
+# Basic prediction with Apple stock data
+./stocksense --file data/aapl_stock_data.csv --days 7
+
+# Verbose output with custom split ratio
+./stocksense -f data/MSFT.csv -d 10 -s 0.75 -v
+
+# Compare with Moving Average baseline
+./stocksense --file data/GOOGL.csv --model ma
+```
+
+### Sample Output
 
 ```
-========================================================
-         StockSense - Stock Price Predictor           
-========================================================
- Dataset:        data/AAPL.csv
+════════════════════════════════════════════════════════════
+              StockSense - Stock Price Predictor            
+════════════════════════════════════════════════════════════
+ Dataset:        data/aapl_stock_data.csv
  Training Set:   2023-01-03 to 2023-04-14
  Testing Set:    2023-04-17 to 2023-05-26
- Features Used:  SMA5, SMA20, DailyReturn,
-                 PriceRange, VolumeChange
---------------------------------------------------------
+ Features Used:  SMA5, SMA20, DailyReturn, PriceRange, VolumeChange
+────────────────────────────────────────────────────────────
  MODEL COMPARISON:
 
  Moving Average Baseline:
-   RMSE: $3.45  |  MAE: $2.89  |  MAPE: 4.1%
+   RMSE: $3.45  │  MAE: $2.89  │  MAPE: 4.1%
 
  Linear Regression:
-   RMSE: $2.21  |  MAE: $1.76  |  MAPE: 2.8%
+   RMSE: $2.21  │  MAE: $1.76  │  MAPE: 2.8%
 
- [OK] Linear Regression wins by 32% (MAPE)
---------------------------------------------------------
- NEXT 5-DAY PREDICTION:
-   Day 1: $176.12  |  Day 2: $176.45
-   Day 3: $176.78  |  Day 4: $177.01
-   Day 5: $177.25
-========================================================
+ ✓ Linear Regression outperforms baseline by 32% (MAPE)
+────────────────────────────────────────────────────────────
+ NEXT 5-DAY FORECAST:
+   Day 1: $176.12  │  Day 2: $176.45  │  Day 3: $176.78
+   Day 4: $177.01  │  Day 5: $177.25
+════════════════════════════════════════════════════════════
 ```
 
-## Technical Details
+---
 
-### Linear Regression Implementation
+## Architecture
 
-The model uses the **Normal Equation** (closed-form solution):
+### Project Structure
+
+```
+StockSense/
+├── CMakeLists.txt              # Build configuration
+├── README.md                   # Documentation
+├── data/
+│   └── aapl_stock_data.csv     # Sample stock data
+├── output/
+│   └── predictions.csv         # Generated predictions
+├── include/
+│   ├── StockData.h             # Core data structures
+│   ├── CSVParser.h             # File I/O operations
+│   ├── DataCleaner.h           # Preprocessing pipeline
+│   ├── FeatureEngine.h         # Technical indicators
+│   ├── Matrix.h                # Linear algebra operations
+│   ├── LinearRegression.h      # ML model implementation
+│   ├── BaselineModel.h         # Baseline comparison
+│   ├── Evaluator.h             # Metrics calculation
+│   ├── Predictor.h             # Pipeline orchestrator
+│   └── Display.h               # Console formatting
+├── src/
+│   ├── main.cpp                # Entry point & CLI
+│   └── *.cpp                   # Implementation files
+└── tests/
+    └── test_main.cpp           # Unit test suite
+```
+
+### Data Flow Pipeline
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│  CSV Input  │───▶│  Cleaning   │───▶│  Feature    │───▶│   Train/    │
+│   Parser    │    │  Pipeline   │    │  Engineering│    │   Test Split│
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+                                                                │
+                   ┌─────────────┐    ┌─────────────┐           │
+                   │  Prediction │◀───│   Model     │◀──────────┘
+                   │   Output    │    │  Training   │
+                   └─────────────┘    └─────────────┘
+```
+
+---
+
+## Documentation
+
+### Technical Implementation
+
+#### Linear Regression: The Normal Equation
+
+The model computes optimal weights using the closed-form solution:
 
 ```
 θ = (XᵀX)⁻¹Xᵀy
 ```
 
-Where:
-- `X` = Feature matrix with bias column
-- `y` = Target vector (closing prices)
-- `θ` = Learned coefficients
+| Symbol | Description |
+|--------|-------------|
+| `X` | Feature matrix with bias column |
+| `y` | Target vector (closing prices) |
+| `θ` | Learned coefficients |
 
-### Features
+This approach provides an exact solution without iterative optimization, making it computationally efficient for datasets of moderate size.
 
-| Feature | Description | Interview Explanation |
-|---------|-------------|----------------------|
-| SMA-5 | 5-day Simple Moving Average | "Smooths short-term noise" |
-| SMA-20 | 20-day Simple Moving Average | "Captures longer trends" |
-| Daily Return | `(close - prev_close) / prev_close * 100` | "Daily momentum" |
-| Price Range | `high - low` | "Intraday volatility" |
-| Volume Change | `(vol - prev_vol) / prev_vol * 100` | "Trading activity change" |
+#### Feature Engineering
 
-### Time-Aware Train/Test Split
+| Feature | Formula | Purpose |
+|---------|---------|---------|
+| **SMA-5** | `mean(close[t-4:t])` | Short-term trend smoothing |
+| **SMA-20** | `mean(close[t-19:t])` | Long-term trend identification |
+| **Daily Return** | `(close - prev_close) / prev_close × 100` | Momentum indicator |
+| **Price Range** | `high - low` | Intraday volatility measure |
+| **Volume Change** | `(volume - prev_volume) / prev_volume × 100` | Trading activity signal |
 
-**Critical for time-series data**: Training data comes BEFORE test data chronologically. Random shuffling would cause **data leakage**.
+#### Time-Series Best Practices
 
-## Interview Talking Points
+> **Critical**: This project uses chronological train/test splitting. Random shuffling is avoided as it causes **data leakage**—where the model inadvertently trains on future information.
 
-1. **Why C++ instead of Python?**
-   > "I wanted to understand the math behind ML by implementing it myself. C++ forces you to handle memory and matrix operations manually."
+```
+Timeline:  ──────[Training Data]──────│──────[Test Data]──────▶
+                                      ↑
+                               Split Point (80%)
+```
 
-2. **Why no external libraries?**
-   > "I implemented the Normal Equation from scratch to show I understand HOW linear regression works, not just how to call sklearn.fit()."
+---
 
-3. **How do you handle time-series data?**
-   > "Time-based split, not random shuffle. Shuffling causes data leakage where the model trains on future data."
+## Data Sources
 
-4. **How do you know the model works?**
-   > "I compare against a Moving Average baseline and measure RMSE, MAE, and MAPE. My model beat baseline by 32% on MAPE."
+### Obtaining Stock Data
 
-## Getting Stock Data
+Download historical stock data in Yahoo Finance CSV format:
 
-Download from [Kaggle](https://www.kaggle.com/datasets):
-- Search "AAPL stock" or "Apple stock data"
-- Download CSV in Yahoo Finance format:
-  ```
-  Date,Open,High,Low,Close,Adj Close,Volume
-  ```
+**Option 1: Yahoo Finance**
+1. Visit [finance.yahoo.com](https://finance.yahoo.com)
+2. Search for a stock (e.g., AAPL)
+3. Go to "Historical Data"
+4. Download CSV
+
+**Option 2: Kaggle Datasets**
+- Search for "stock data" on [kaggle.com/datasets](https://www.kaggle.com/datasets)
+
+### Expected CSV Format
+
+```csv
+Date,Open,High,Low,Close,Adj Close,Volume
+2023-01-03,130.28,130.90,124.17,125.07,124.62,112117500
+2023-01-04,126.89,128.66,125.08,126.36,125.91,89113600
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
 
 ## License
 
-MIT License - Feel free to use for learning and interviews!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Author
+---
 
-Built as a portfolio project demonstrating:
-- C++17 programming
-- Machine Learning fundamentals
-- Data preprocessing
-- Clean code architecture
+## Acknowledgments
+
+- Inspired by the need to understand ML fundamentals beyond high-level APIs
+- Built as a demonstration of modern C++ capabilities
+- Thanks to the open-source community for continuous inspiration
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#stocksense)**
+
+Made with dedication by [Diptendu Nandi](https://github.com/diptendunandi)
+
+</div>
