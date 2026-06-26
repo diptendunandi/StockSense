@@ -1,0 +1,45 @@
+# Build directories
+build/
+bin/
+cmake-build-*/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.so
+*.dylib
+*.dll
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+
+# Output files (generated at runtime)
+output/*.csv
+
+# Large data files (optional - remove this line if you want to include sample data)
+# data/*.csv
+
+# Logs
+*.log
+
+# Package files
+*.tar.gz
+*.zip
